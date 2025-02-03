@@ -105,7 +105,7 @@ int test_string_xml_2() {
     txt.resize(ifile.read(uxs::as_span(&txt[0], sz)));
 
     uxs::db::value root = {{"empty_array", uxs::db::make_array()},
-                           {"array_of_one_element", 1},
+                           {"array_of_one_element", {1}},
                            {"array_of_strings", {"\'Faust\'", "\"Philosophie\"", "<Medizin>"}},
                            {"null", nullptr},
                            {"empty_object", uxs::db::make_record()},
@@ -128,7 +128,7 @@ int test_string_xml_2() {
 
     uxs::oflatbuf output;
     uxs::print(output, "<?xml version='1.1' encoding='UTF-8' ?>\n");
-    uxs::db::xml::writer(output).write(root, "root");
+    uxs::db::xml::writer(output, 4).write(root, "root");
     VERIFY(std::string_view(output.data(), output.size()) == txt);
 
     uxs::iflatbuf input(txt);

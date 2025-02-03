@@ -52,7 +52,7 @@ int test_string_json_1() {
     VERIFY(root["null"].is_null());
 
     uxs::oflatbuf output;
-    uxs::db::json::writer(output, 2, ' ').write(root);
+    uxs::db::json::writer(output, 2, '\n').write(root);
     VERIFY(std::string_view(output.data(), output.size()) == txt);
     return 0;
 }

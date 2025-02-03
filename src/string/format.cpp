@@ -599,7 +599,7 @@ int test_string_format_2() {
     MUST_THROW((void)uxs::vformat(L"{:0s}", uxs::make_wformat_args(unmove(L"hello"))));
 
     MUST_THROW((void)uxs::vformat("{:c}", uxs::make_format_args(unmove(1230))));
-#if !defined(WCHAR_MAX) || WCHAR_MAX <= 0xffff
+#if WCHAR_MAX <= 0xffff
     MUST_THROW((void)uxs::vformat(L"{:c}", uxs::make_wformat_args(unmove(123000))));
 #endif
 
@@ -806,6 +806,25 @@ int test_string_format_6() {
     MUST_THROW((void)uxs::vformat("{:m}", uxs::make_format_args(unmove(t))));
 
     VERIFY(uxs::format("{::#5x:+010.2E}", p) == "(  0x3, +03.14E+00)");
+
+    std::array<int, 4> ints{12, 10, 15, 14};
+
+    VERIFY(uxs::format("{}", ints) == "[12, 10, 15, 14]");
+    VERIFY(uxs::format("{::X}", ints) == "[C, A, F, E]");
+    VERIFY(uxs::format("{:n:_^4}", ints) == "_12_, _10_, _15_, _14_");
+
+    std::array<std::pair<char, int>, 3> char_pairs{std::make_pair('A', 5), std::make_pair('B', 10),
+                                                   std::make_pair('C', 12)};
+
+    VERIFY(uxs::format("{}", char_pairs) == "[('A', 5), ('B', 10), ('C', 12)]");
+    VERIFY(uxs::format("{:m}", char_pairs) == "{'A': 5, 'B': 10, 'C': 12}");
+
+    std::array<char, 4> star{'S', 'T', 'A', 'R'};
+
+    VERIFY(uxs::format("{}", star) == "['S', 'T', 'A', 'R']");
+    VERIFY(uxs::format("{:s}", star) == "STAR");
+    VERIFY(uxs::format("{:?s}", star) == "\"STAR\"");
+
     return 0;
 }
 
